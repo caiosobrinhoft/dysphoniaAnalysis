@@ -108,6 +108,29 @@ void translateAudioByMean(double* audio, int size, FILE *arq) {
         fprintf(arq, "%.10lf\n", audio[i]);
     }
 }
+double energy(double *input_vector, int length){
+    double e=0;
+    for(int i = 0; i < length; i++)
+        e += pow(input_vector[i],2);
+    return(e);
+}
+
+void a3(double *s, int M){
+    int L = 0;
+    double C = 5; //5%
+    int T = ((100/C)-((int)(100/C))==0)?(100/C)-1:(int)(100/C); //number of elements in T
+    double *f = new double[T]; //dynamic vetor declaration
+    double z =energy(&s[0], M)*((double)(C)/100);
+
+    for (int k = 0; k < T; k++)
+    {
+        while (energy(&s[0], L) < ((k+1)*z))
+            L++;
+        f[k] = (double)(L)/(double)(M);
+        printf("%.10lf\n", f[k]);
+    }
+    
+}
 
 
 #endif

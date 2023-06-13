@@ -44,7 +44,8 @@ int main(){
 
     normalizeAudio(audioDouble, dataSize, normal);
     translateAudioByMean(audioDouble, dataSize, texto);
-
+    a3(audioDouble, dataSize);
+    
     fclose(wavFile);
     fclose(wavCopia);
     fclose(invert);

@@ -32,5 +32,6 @@ void invertAudio(FILE *arq, FILE *inverted);
 void wavHeader(FILE *arq);
 void normalizeAudio(double *audio, int size, FILE *fp);
 void translateAudioByMean(double *audio, int size, FILE *fp);
+void a3(double *s, int M);
 
 #endif
