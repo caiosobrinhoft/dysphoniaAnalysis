@@ -132,5 +132,31 @@ void a3(double *s, int M){
     
 }
 
+double zcr(double* input_vector, int length){
+    double z = 0;
+    for(int i=0;i<length - 1;i++)
+        z += (input_vector[i] * input_vector[i + 1] < 0)?1:0;
+    return(z);
+}
 
+void b3(double *s ,int M){
+    double mean = 0;
+
+    for(int k = 0; k < M; k++)
+        mean+=s[k]/(double)(M);
+    for(int k = 0; k < M; k++)
+        s[k]-= mean;
+
+    int L = 0;
+    double C = 5;
+    int T = ((100/C) - ((int)(100/C)) == 0)?(100/C) - 1 : (int)(100/C);
+    double *f = new double[T];
+    double z = zcr(&s[0],M)*((double)(C)/100);
+    for(int k = 0; k < T; k++){
+        while(zcr(&s[0], L)<((k + 1)*z))
+            L++;
+        f[k] = (double)(L)/(double)(M);
+        printf("%.10lf\n", f[k]);
+    }
+}
 #endif
