@@ -121,7 +121,8 @@ void a3(double *s, int M){
     int T = ((100/C)-((int)(100/C))==0)?(100/C)-1:(int)(100/C); //number of elements in T
     double *f = new double[T]; //dynamic vetor declaration
     double z =energy(&s[0], M)*((double)(C)/100);
-
+    
+    printf("\nValues of A3 method to inspect constancy in action of the physical entity responsible for generating the signal: \n");
     for (int k = 0; k < T; k++)
     {
         while (energy(&s[0], L) < ((k+1)*z))
@@ -152,6 +153,8 @@ void b3(double *s ,int M){
     int T = ((100/C) - ((int)(100/C)) == 0)?(100/C) - 1 : (int)(100/C);
     double *f = new double[T];
     double z = zcr(&s[0],M)*((double)(C)/100);
+
+    printf("\nValues of B3 method inspect the constancy in frequency of the physical entity responsible for generating signal: \n");
     for(int k = 0; k < T; k++){
         while(zcr(&s[0], L)<((k + 1)*z))
             L++;

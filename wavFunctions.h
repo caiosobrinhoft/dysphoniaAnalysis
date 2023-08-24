@@ -32,6 +32,9 @@ void invertAudio(FILE *arq, FILE *inverted);
 void wavHeader(FILE *arq);
 void normalizeAudio(double *audio, int size, FILE *fp);
 void translateAudioByMean(double *audio, int size, FILE *fp);
+double energy(double *input_vector, int length);
 void a3(double *s, int M);
+double zcr(double* input_vector, int length);
+void b3(double *s ,int M);
 
 #endif

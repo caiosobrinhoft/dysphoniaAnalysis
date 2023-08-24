@@ -11,7 +11,7 @@ int main(){
     FILE *normal;
     
     //Opening the archives for reading and writing
-    wavFile = fopen("applause.wav", "rb");
+    wavFile = fopen("561-a_n.wav", "rb");
     wavCopia = fopen("copia.wav", "wb");
     invert = fopen("invert.wav", "wb");
     texto = fopen("saida.txt", "wb");
@@ -23,14 +23,14 @@ int main(){
 
     wavHeader(wavFile);
     fclose(wavFile);
-    wavFile = fopen("applause.wav", "rb");
+    wavFile = fopen("561-a_n.wav", "rb");
 
     copyAudio(wavFile, wavCopia);
     invertAudio(wavFile, invert);
 
     fclose(wavFile);
 
-    wavFile = fopen("applause.wav", "rb");
+    wavFile = fopen("561-a_n.wav", "rb");
     int dataSize;
     
     dataSize = getFileSizeWithoutHeader(wavFile, headerSize);
@@ -45,6 +45,7 @@ int main(){
     normalizeAudio(audioDouble, dataSize, normal);
     translateAudioByMean(audioDouble, dataSize, texto);
     a3(audioDouble, dataSize);
+    b3(audioDouble, dataSize);
     
     fclose(wavFile);
     fclose(wavCopia);
