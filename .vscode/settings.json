@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "random": "cpp"
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
     }
 }

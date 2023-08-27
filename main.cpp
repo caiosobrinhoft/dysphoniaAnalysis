@@ -9,37 +9,38 @@ int main(){
     FILE *invert;
     FILE *texto;
     FILE *normal;
+    FILE *base;
     
     //Opening the archives for reading and writing
-    wavFile = fopen("561-a_n.wav", "rb");
+    wavFile = fopen("1984-a_n.wav", "rb");
     wavCopia = fopen("copia.wav", "wb");
     invert = fopen("invert.wav", "wb");
-    texto = fopen("saida.txt", "wb");
-    normal = fopen("normal.txt", "wb");
+    texto = fopen("saida.txt", "w");
+    normal = fopen("normal.txt", "w");
+    base = fopen("base.txt", "w");
 
     if(wavFile == NULL){
         cout << "\nCannot open this file!";
     }
 
-    wavHeader(wavFile);
+    int dataSize = wavHeader(wavFile, headerSize);
     fclose(wavFile);
-    wavFile = fopen("561-a_n.wav", "rb");
+    wavFile = fopen("1984-a_n.wav", "rb");
 
     copyAudio(wavFile, wavCopia);
     invertAudio(wavFile, invert);
 
     fclose(wavFile);
 
-    wavFile = fopen("561-a_n.wav", "rb");
-    int dataSize;
-    
-    dataSize = getFileSizeWithoutHeader(wavFile, headerSize);
-    short int audio[dataSize]; 
-    fread(audio, sizeof(short int), dataSize, wavFile);
+    wavFile = fopen("1984-a_n.wav", "r");
+    int16_t *audio = (int16_t *)malloc(dataSize);
+    fseek(wavFile, headerSize, SEEK_SET);
+    fread(audio, dataSize, 1, wavFile);
 
-    double audioDouble[dataSize];
+    double *audioDouble = (double*)malloc(dataSize*sizeof(double));
     for (int i = 0; i < dataSize; i++) {
         audioDouble[i] = static_cast<double>(audio[i]);
+        fprintf(base, "%d\n", audio[i]);
     }
 
     normalizeAudio(audioDouble, dataSize, normal);
@@ -52,6 +53,7 @@ int main(){
     fclose(invert);
     fclose(texto);
     fclose(normal);
+    fclose(base);
 
     return 0;
 }

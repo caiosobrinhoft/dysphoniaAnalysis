@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include "wavFunctions.h"
+#include <math.h>
 
 using namespace std;
 
@@ -22,12 +23,12 @@ int getFileSizeWithoutHeader(FILE *arq, int headerSize) {
     return dataSize;
 }
 
-void wavHeader(FILE *arq){
+int wavHeader(FILE *arq, int headerSize){
     header header;
 
     fread(&header,1, sizeof(header), arq);
     cout << "\nFile type: "<< header.riff[0]<<header.riff[1]<<header.riff[2]<<header.riff[3];
-    cout << "\nFile size, without the header: "<<getFileSize(arq)-(sizeof(header.riff) + sizeof(header.chunk_size));
+    cout << "\nFile size, without the header: "<<getFileSize(arq)-headerSize;
     fseek(arq, sizeof(header), SEEK_SET);
     cout << "\nSubtype: "<< header.format[0]<<header.format[1]<<header.format[2]<<header.format[3];
     cout << "\nIdentifier: " << header.subchunk1_id[0]<<header.subchunk1_id[1]<<header.subchunk1_id[2]<<header.subchunk1_id[3];
@@ -47,6 +48,7 @@ void wavHeader(FILE *arq){
     cout << "\nBits per sample: " << (header.bits_per_sample) << " bits";
     cout << "\nSubchunk id: " <<header.subchunk2_id[0]<<header.subchunk2_id[1]<<header.subchunk2_id[2]<<header.subchunk2_id[3];
     cout <<"\nData size: " <<header.subchunk2_size << endl;
+    return header.subchunk2_size;
 }
 
 void copyAudio(FILE *arq, FILE *copy){
@@ -81,18 +83,43 @@ void invertAudio(FILE *arq, FILE *inverted){
     fwrite(invertedData, 1, header.subchunk2_size, inverted);
 }
 
+void normalizeSignal(double *signal, int size, double targetAmplitude, FILE *arq) {
+    double maxAmplitude = 0.0;
+
+    // Encontre o valor máximo absoluto no sinal.
+    for (int i = 0; i < size; i++) {
+        maxAmplitude = fmax(maxAmplitude, fabs(signal[i]));
+    }
+
+    // Verifique se o sinal já está normalizado.
+    if (maxAmplitude == 0.0) {
+        return;
+    }
+
+    // Normalize o sinal dividindo cada amostra pelo valor máximo.
+    for (int i = 0; i < size; i++) {
+        signal[i] /= maxAmplitude;
+    }
+
+    // Aplique o ganho para atingir a amplitude alvo, se especificado.
+    if (targetAmplitude != 1.0) {
+        for (int i = 0; i < size; i++) {
+            signal[i] *= targetAmplitude;
+            fprintf(arq, "%lf\n", signal[i]);
+        }
+    }
+    
+}
+
 void normalizeAudio(double *audio, int size, FILE *arq){
     double maxAmplitude = 0.0;
 
     for(int i = 0; i < size; i++){
-        double amplitude = std::abs(audio[i]);
-        if(amplitude > maxAmplitude)
-            maxAmplitude = amplitude;
+        maxAmplitude = std::max(maxAmplitude, std::abs(audio[i]));
     }
-
     for(int i = 0; i < size; i++){
-        audio[i] /= maxAmplitude;
-        fprintf(arq, "%.10lf\n", audio[i]);
+        audio[i] = audio[i]/maxAmplitude;
+        fprintf(arq, "%lf\n", audio[i]);
     }
 }
 
@@ -160,6 +187,9 @@ void b3(double *s ,int M){
             L++;
         f[k] = (double)(L)/(double)(M);
         printf("%.10lf\n", f[k]);
+
     }
 }
+
+
 #endif
