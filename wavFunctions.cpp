@@ -118,8 +118,15 @@ void normalizeAudio(double *audio, int size, FILE *arq){
         maxAmplitude = std::max(maxAmplitude, std::abs(audio[i]));
     }
     for(int i = 0; i < size; i++){
+        int j = i+1;
         audio[i] = audio[i]/maxAmplitude;
-        fprintf(arq, "%lf\n", audio[i]);
+        fprintf(arq, "% lf,", audio[i]);
+
+        if (j % 4 == 0)
+        {
+            fprintf(arq, "\n");
+        }
+        
     }
 }
 
@@ -190,6 +197,5 @@ void b3(double *s ,int M){
 
     }
 }
-
 
 #endif
